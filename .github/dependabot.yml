@@ -7,3 +7,10 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    # Raise pull requests for version updates
+    # to pip against the `sk-debug` branch
+    target-branch: "sk-debug"

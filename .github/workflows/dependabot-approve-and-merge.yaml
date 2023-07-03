@@ -5,7 +5,7 @@ name: 'dependabot approve and merge'
 on: 
   workflow_call:
     secrets:
-      SENZING_GITHUB_CODEOWNER_PR_RW_TOKEN:
+      TEMP_SKERN_PR_RW_TOKEN:
         required: true
 
 permissions:
@@ -15,7 +15,7 @@ permissions:
 jobs:
   dependabot-approve-and-merge:
     runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' || github.actor == 'kernelsam' }}
+    if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
       - name: Dependabot metadata
         id: dependabot-metadata
@@ -28,8 +28,8 @@ jobs:
           gh pr review --approve "$PR_URL" -b "I'm **approving** this pull request because **it includes a patch update**"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
-          GH_TOKEN: ${{ secrets.SENZING_GITHUB_CODEOWNER_PR_RW_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.SENZING_GITHUB_CODEOWNER_PR_RW_TOKEN }}
+          GH_TOKEN: ${{ secrets.TEMP_SKERN_PR_RW_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TEMP_SKERN_PR_RW_TOKEN }}
           GH_DEBUG: '1'
       - name: Auto merge patch version PRs
         if: ${{ steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' }}
