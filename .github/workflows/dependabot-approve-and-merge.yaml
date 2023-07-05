@@ -15,7 +15,7 @@ permissions:
 jobs:
   dependabot-approve-and-merge:
     runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' }}
+    if: ${{ github.actor == 'dependabot[bot]' || github.actor == 'kernelsam' }}
     steps:
       - name: Dependabot metadata
         id: dependabot-metadata
@@ -23,14 +23,18 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - name: Approve patch version PRs
+        uses: hmarr/auto-approve-action@v3
+        with:
+          github-token: ${{ secrets.TEMP_SKERN_PR_RW_TOKEN }}
+          pull-request-number: ${{ github.event.inputs.pullRequestNumber }}
+          review-message: "Automated: **approving** this pull request because **it includes a patch update**"
         # if: ${{ steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' }}
-        run: |
-          gh pr review --approve "$PR_URL" -b "I'm **approving** this pull request because **it includes a patch update**"
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GH_TOKEN: ${{ secrets.TEMP_SKERN_PR_RW_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.TEMP_SKERN_PR_RW_TOKEN }}
-          GH_DEBUG: '1'
+        #run: |
+        #  gh pr review --approve "$PR_URL" -b "I'm **approving** this pull request because **it includes a patch update**"
+        #env:
+        #  PR_URL: ${{ github.event.pull_request.html_url }}
+        #  GH_TOKEN: ${{ secrets.TEMP_SKERN_PR_RW_TOKEN }}
+        #  GH_DEBUG: '1'
       - name: Auto merge patch version PRs
         if: ${{ steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' }}
         run: gh pr merge --auto --squash "$PR_URL"
