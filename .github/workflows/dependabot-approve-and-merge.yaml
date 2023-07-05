@@ -23,11 +23,10 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - name: Approve patch version PRs
-        uses: hmarr/auto-approve-action@v3
+        uses: fastify/github-action-merge-dependabot@v3
         with:
+          approve-only: true
           github-token: ${{ secrets.TEMP_SKERN_PR_RW_TOKEN }}
-          pull-request-number: ${{ github.event.inputs.pullRequestNumber }}
-          review-message: "Automated: **approving** this pull request because **it includes a patch update**"
         # if: ${{ steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' }}
         #run: |
         #  gh pr review --approve "$PR_URL" -b "I'm **approving** this pull request because **it includes a patch update**"
